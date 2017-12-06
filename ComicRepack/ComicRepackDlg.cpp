@@ -281,7 +281,7 @@ for /f "delims=\n" %%i in ('dir /b /a:d') do %rar% a "%%i.rar" ".\%%i")";
 	}
 
 	// get total vol numbers
-	int m_nVolTotal = arrFolderList.size() / nVolNum;
+	size_t m_nVolTotal = arrFolderList.size() / nVolNum;
 	if (arrFolderList.size() % nVolNum)
 	{
 		++m_nVolTotal;
@@ -324,7 +324,7 @@ for /f "delims=\n" %%i in ('dir /b /a:d') do %rar% a "%%i.rar" ".\%%i")";
 
 			CStringW strSrc = strBase + L"\\" + arrFolderList[i * nVolNum + j];
 			CStringW strChapterName = arrFolderList[i * nVolNum + j];
-			if (strChapterName.Mid(0, 8) == _T("chapter_") && strChapterName[11] == _T('_'))
+			if (strChapterName.GetLength() > 12 && strChapterName.Mid(0, 8) == _T("chapter_") && strChapterName[11] == _T('_'))
 			{
 				strChapterName = strChapterName.Mid(12);
 			}
@@ -343,6 +343,10 @@ for /f "delims=\n" %%i in ('dir /b /a:d') do %rar% a "%%i.rar" ".\%%i")";
 					continue;
 				}
 				else if ((oFind2.IsDirectory() == TRUE))
+				{
+					continue;
+				}
+				else if (oFind2.GetFileName() == _T(".finish"))
 				{
 					continue;
 				}
@@ -409,7 +413,7 @@ for /f "delims=\n" %%i in ('dir /b /a:d') do %rar% a "%%i.rar" ".\%%i")";
 		{
 			if (arrChapters[k].IsEmpty())
 			{
-				swprintf_s(buf, L"Chapter %d,%03d\r\n", i * nVolNum + k + nChapterStart, arrIndex[k]);
+				swprintf_s(buf, L"Chapter %zd,%03d\r\n", i * nVolNum + k + nChapterStart, arrIndex[k]);
 			}
 			else
 			{
